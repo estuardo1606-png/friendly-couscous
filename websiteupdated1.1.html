@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>Elite Mobile Car Wash | Detailing a Domicilio en Los Ángeles</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0f1d',
+                            surface: '#0f172a',
+                            card: '#131d35',
+                            gold: '#f59e0b',
+                            goldLight: '#fbbf24',
+                            accent: '#38bdf8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Touch optimization & smooth scrolling */
+        .ios-scroll {
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Modal visibility handling - strictly isolated from page clicks */
+        .modal-overlay {
+            display: none;
+        }
+        .modal-overlay.active {
+            display: flex !important;
+        }
+        /* Video background filter */
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden min-h-screen">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-lg border-b border-slate-800/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-18 sm:h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-2.5 sm:space-x-3 active:scale-95 transition-transform cursor-pointer">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 font-bold text-lg sm:text-xl shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-car-side"></i>
+                </div>
+                <span class="text-base sm:text-lg md:text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">EliteMobile</span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex items-center space-x-7 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <a href="#servicios" data-i18n="nav_services" class="hover:text-amber-400 transition-colors py-2">Servicios</a>
+                <a href="#cobertura" data-i18n="nav_coverage" class="hover:text-amber-400 transition-colors py-2">Cobertura</a>
+                <a href="#galeria" data-i18n="nav_gallery" class="hover:text-amber-400 transition-colors py-2">Trabajos</a>
+                <a href="#agendar" data-i18n="nav_book" class="hover:text-amber-400 transition-colors py-2">Agendar Cita</a>
+                <a href="#faq" data-i18n="nav_faq" class="hover:text-amber-400 transition-colors py-2">FAQ</a>
+            </nav>
+
+            <!-- Actions Bar: Language Selector & Auth -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Mobile-Optimized Language Selector -->
+                <div class="relative">
+                    <select id="lang-selector" onchange="changeLanguage(this.value)" class="appearance-none bg-slate-900 active:bg-slate-800 border border-slate-700/80 text-slate-100 text-xs font-bold py-2 sm:py-2.5 pl-3 pr-7 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 cursor-pointer shadow-sm">
+                        <option value="es">🇪🇸 ES</option>
+                        <option value="en">🇺🇸 EN</option>
+                        <option value="ko">🇰🇷 한국어</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+
+                <!-- Account / Admin Trigger -->
+                <div id="auth-header-container" class="flex items-center space-x-1.5 sm:space-x-2">
+                    <button type="button" onclick="openAuthModal('login')" id="btn-login-header" class="bg-slate-900 active:bg-slate-800 border border-slate-700/80 text-slate-200 text-xs font-semibold py-2 sm:py-2.5 px-2.5 sm:px-3.5 rounded-xl transition-all flex items-center space-x-1.5 touch-manipulation min-h-[38px] cursor-pointer">
+                        <i class="fa-regular fa-user text-amber-400"></i>
+                        <span data-i18n="nav_login" class="hidden sm:inline">Mi Cuenta</span>
+                    </button>
+                    <!-- Admin button shown when logged in -->
+                    <button type="button" onclick="openAdminDashboard()" id="btn-admin-header" class="hidden bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 text-xs font-bold py-2 sm:py-2.5 px-3 rounded-xl transition-all items-center space-x-1.5 animate-pulse min-h-[38px] cursor-pointer">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span data-i18n="nav_admin_panel">Admin</span>
+                    </button>
+                </div>
+
+                <!-- Quick Book CTA Button -->
+                <a href="#agendar" data-i18n="btn_book_now" class="bg-gradient-to-r from-amber-500 to-amber-400 active:from-amber-600 active:to-amber-500 text-slate-950 font-bold px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-amber-500/20 active:scale-95 inline-flex items-center text-xs sm:text-sm min-h-[38px] touch-manipulation cursor-pointer">
+                    Reservar
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Background Video -->
+    <section class="relative min-h-[92vh] sm:min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">
+        <!-- Background Video Container -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden z-0">
+            <video 
+                id="hero-bg-video"
+                class="video-bg filter brightness-[0.38] contrast-125 saturate-125"
+                autoplay
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                poster="https://placehold.co/1280x720/0a0f1d/f59e0b?text=Elite+Mobile+Detailing">
+                <!-- User provided video file -->
+                <source src="Vertical_cinematic_commer.mp4" type="video/mp4">
+                <!-- Cloud fallback stream if local video path is not served -->
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-car-wash-with-water-pressure-40292-large.mp4" type="video/mp4">
+            </video>
+
+            <!-- Video Dark Gradient Overlays for high legibility -->
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/65 to-slate-950 z-10 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-slate-950/50 to-slate-950 z-10 pointer-events-none"></div>
+        </div>
+
+        <!-- Video Control Bar (Floating corner controls) -->
+        <div class="absolute bottom-4 right-4 z-20 flex items-center space-x-2 bg-slate-950/80 backdrop-blur-md border border-slate-800/80 px-3 py-1.5 rounded-2xl shadow-xl">
+            <button type="button" onclick="toggleVideoPlayback()" id="btn-video-play" class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs active:scale-95 transition-transform" title="Pausar / Reproducir">
+                <i class="fa-solid fa-pause" id="play-icon"></i>
+            </button>
+            <button type="button" onclick="toggleVideoSound()" id="btn-video-sound" class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs active:scale-95 transition-transform" title="Audio">
+                <i class="fa-solid fa-volume-xmark" id="sound-icon"></i>
+            </button>
+            <label class="cursor-pointer text-[10px] text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-1 rounded-lg border border-amber-500/30 flex items-center space-x-1" title="Cargar video propio desde tu dispositivo">
+                <i class="fa-solid fa-upload"></i>
+                <span class="hidden sm:inline">Tu video</span>
+                <input type="file" id="local-video-input" accept="video/mp4,video/*" class="hidden" onchange="loadUserLocalVideo(event)">
+            </label>
+        </div>
+
+        <!-- Hero Foreground Content -->
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-20 text-center py-10">
+            <div class="inline-flex items-center space-x-2 bg-amber-500/15 border border-amber-500/30 px-4 py-2 rounded-full text-amber-400 text-xs sm:text-sm font-semibold uppercase tracking-wider mb-6 backdrop-blur-md shadow-lg shadow-amber-500/10">
+                <i class="fa-solid fa-wand-magic-sparkles animate-pulse"></i>
+                <span data-i18n="hero_badge">Detailing Exclusivo a Domicilio en Los Ángeles</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.15] drop-shadow-2xl">
+                <span data-i18n="hero_title_1">El cuidado que tu auto de lujo merece, </span>
+                <span class="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent" data-i18n="hero_title_2">sin moverte de casa</span>.
+            </h1>
+
+            <p class="text-sm sm:text-base md:text-xl text-slate-200 mb-8 leading-relaxed font-light max-w-3xl mx-auto drop-shadow-lg" data-i18n="hero_desc">
+                Servicio profesional de lavado y detallado móvil para vehículos de alta gama. Ahorra tiempo y agenda con nuestras tarifas dinámicas adaptadas a tu comodidad en Greater Los Angeles.
+            </p>
+
+            <!-- Trust Micro-Badges -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs text-slate-200 mb-9">
+                <div class="flex items-center space-x-1.5 bg-slate-950/80 backdrop-blur-md border border-slate-800/90 px-3 py-2 rounded-xl shadow-lg">
+                    <span class="text-amber-400 font-bold">★★★★★</span>
+                    <span class="font-semibold" data-i18n="hero_stat_rating">4.9/5 Calificación</span>
+                </div>
+                <div class="flex items-center space-x-1.5 bg-slate-950/80 backdrop-blur-md border border-slate-800/90 px-3 py-2 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-shield-check text-emerald-400 text-sm"></i>
+                    <span class="font-semibold" data-i18n="hero_stat_certified">100% Anti-Rayones</span>
+                </div>
+                <div class="flex items-center space-x-1.5 bg-slate-950/80 backdrop-blur-md border border-slate-800/90 px-3 py-2 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-bolt text-amber-400 text-sm"></i>
+                    <span class="font-semibold" data-i18n="hero_stat_express">Exprés 3 Horas</span>
+                </div>
+            </div>
+
+            <!-- Main CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 max-w-md mx-auto">
+                <a href="#agendar" class="w-full sm:w-auto flex-1 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-extrabold px-7 py-4 rounded-xl transition-all shadow-xl shadow-amber-500/30 text-center flex items-center justify-center space-x-2 text-sm sm:text-base touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-calendar-days text-base"></i>
+                    <span data-i18n="btn_hero_book">Cotizar y Agendar Cita</span>
+                </a>
+                <a href="#cobertura" class="w-full sm:w-auto flex-1 bg-slate-950/90 hover:bg-slate-900 active:bg-slate-800 border border-slate-700/80 text-white font-bold px-7 py-4 rounded-xl transition-all text-center backdrop-blur-md text-sm sm:text-base touch-manipulation cursor-pointer" data-i18n="btn_hero_coverage">
+                    Verificar Mi Zona
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicios" class="py-20 sm:py-24 bg-slate-900/60 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3" data-i18n="services_heading">Nuestros Paquetes de Cuidado</h2>
+                <p class="text-sm sm:text-base text-slate-400" data-i18n="services_subheading">Tratamientos formulados específicamente para cuidar la pintura, carrocería e interiores delicados de autos nuevos y de lujo.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+                <!-- Service 1 -->
+                <div class="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl relative flex flex-col justify-between group hover:border-amber-500/50 transition-all shadow-xl">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-5">
+                            <i class="fa-solid fa-soap"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold mb-2 text-white" data-i18n="serv1_title">Lavado Básico Interior & Exterior</h3>
+                        <p class="text-slate-400 text-xs mb-5" data-i18n="serv1_desc">Lavado exterior rápido a mano y aspirado esencial de interiores con limpieza de tablero.</p>
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv1_f1">Lavado exterior e rines</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv1_f2">Aspirado interior de cortesía</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv1_f3">Limpieza de cristales básicos</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button type="button" onclick="openServiceDetails('serv1')" class="w-full mb-3 bg-slate-950 hover:bg-slate-800 active:bg-slate-700 text-amber-400 text-xs font-semibold py-3 px-3 rounded-xl border border-slate-800 hover:border-amber-500/40 transition-all flex items-center justify-center space-x-1.5 touch-manipulation cursor-pointer">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span data-i18n="btn_view_details">Ver qué incluye al detalle</span>
+                        </button>
+                        <span class="text-[10px] text-amber-400/80 font-semibold uppercase tracking-wider block text-center" data-i18n="serv1_tag">Económico y práctico</span>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl relative flex flex-col justify-between group hover:border-amber-500/50 transition-all shadow-xl">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-5">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold mb-2 text-white" data-i18n="serv2_title">Lavado Exterior Elite</h3>
+                        <p class="text-slate-400 text-xs mb-5" data-i18n="serv2_desc">Lavado a mano con técnica de doble balde, espuma desengrasante pH neutro y secado con microfibra.</p>
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv2_f1">Limpieza detallada de rines</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv2_f2">Acondicionador e hidratante satinado de neumáticos (con protección UV)</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv2_f3">Cera líquida de protección rápida</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button type="button" onclick="openServiceDetails('serv2')" class="w-full mb-3 bg-slate-950 hover:bg-slate-800 active:bg-slate-700 text-amber-400 text-xs font-semibold py-3 px-3 rounded-xl border border-slate-800 hover:border-amber-500/40 transition-all flex items-center justify-center space-x-1.5 touch-manipulation cursor-pointer">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span data-i18n="btn_view_details">Ver qué incluye al detalle</span>
+                        </button>
+                        <span class="text-[10px] text-amber-400/80 font-semibold uppercase tracking-wider block text-center" data-i18n="serv2_tag">Base ideal exterior</span>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-slate-900 border border-amber-500/50 p-5 sm:p-6 rounded-2xl relative shadow-2xl shadow-amber-500/10 flex flex-col justify-between group">
+                    <div class="absolute -top-3 right-5 bg-amber-500 text-slate-950 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm" data-i18n="serv3_badge">Más Elegido</div>
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-5">
+                            <i class="fa-solid fa-car"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold mb-2 text-white" data-i18n="serv3_title">Detailing Completo Interior & Exterior</h3>
+                        <p class="text-slate-400 text-xs mb-5" data-i18n="serv3_desc">El tratamiento insignia. Devolvemos la estética de concesionario a tu vehículo en casa.</p>
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv3_f1">Todo el servicio Exterior Elite</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv3_f2">Aspirado profundo y cajuela</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv3_f3">Condicionamiento de cuero</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button type="button" onclick="openServiceDetails('serv3')" class="w-full mb-3 bg-amber-500/10 hover:bg-amber-500/20 active:bg-amber-500/30 text-amber-400 text-xs font-bold py-3 px-3 rounded-xl border border-amber-500/40 transition-all flex items-center justify-center space-x-1.5 touch-manipulation cursor-pointer">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span data-i18n="btn_view_details">Ver qué incluye al detalle</span>
+                        </button>
+                        <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block text-center" data-i18n="serv3_tag">Vehículos de lujo</span>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl relative flex flex-col justify-between group hover:border-amber-500/50 transition-all shadow-xl">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-5">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold mb-2 text-white" data-i18n="serv4_title">Protección Cerámica Express</h3>
+                        <p class="text-slate-400 text-xs mb-5" data-i18n="serv4_desc">Sellado de pintura con polímeros avanzados que otorgan brillo espejo y resistencia hidrofóbica.</p>
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv4_f1">Descontaminación de pintura</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv4_f2">Aplicación de sellador cerámico</span></li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-500 mr-2"></i> <span data-i18n="serv4_f3">Protección UV de larga duración</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button type="button" onclick="openServiceDetails('serv4')" class="w-full mb-3 bg-slate-950 hover:bg-slate-800 active:bg-slate-700 text-amber-400 text-xs font-semibold py-3 px-3 rounded-xl border border-slate-800 hover:border-amber-500/40 transition-all flex items-center justify-center space-x-1.5 touch-manipulation cursor-pointer">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span data-i18n="btn_view_details">Ver qué incluye al detalle</span>
+                        </button>
+                        <span class="text-[10px] text-amber-400/80 font-semibold uppercase tracking-wider block text-center" data-i18n="serv4_tag">Máximo acabado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coverage Section -->
+    <section id="cobertura" class="py-20 sm:py-24 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <div class="inline-flex items-center space-x-2 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <span data-i18n="coverage_badge">Cobertura a Domicilio en Los Ángeles</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2.5" data-i18n="coverage_heading">Verifica si Llegamos a tu Zona</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm" data-i18n="coverage_subheading">Ingresa tu código postal (ZIP Code) o vecindario (ej. Beverly Hills, Downtown LA, Santa Monica, Glendale, Pasadena) para verificar disponibilidad.</p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-2.5 max-w-md mx-auto mb-4">
+                    <input type="text" id="zip-input" placeholder="Ej. 90210, 90028, Beverly Hills..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 text-white placeholder-slate-500">
+                    <button type="button" onclick="checkCoverage()" class="bg-amber-500 active:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20 text-sm touch-manipulation cursor-pointer" data-i18n="btn_verify">
+                        Verificar
+                    </button>
+                </div>
+                <div id="coverage-result" class="text-center text-xs sm:text-sm font-medium min-h-[24px]"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Before & After Section -->
+    <section id="galeria" class="py-20 sm:py-24 bg-slate-900/50 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3" data-i18n="gallery_heading">Galería de Resultados (Antes y Después)</h2>
+                <p class="text-sm sm:text-base text-slate-400" data-i18n="gallery_subheading">Toca el botón para comprobar la transformación radical que logramos en cada vehículo de alta gama.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- Gallery Card 1 -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden group shadow-xl">
+                    <div class="relative h-60 sm:h-72 bg-slate-950 flex items-center justify-center overflow-hidden">
+                        <img id="gallery-img-1" src="https://placehold.co/700x450/1e293b/f59e0b?text=Despues+-+Brillo+Espejo+Porsche" alt="Porsche Detailing" class="w-full h-full object-cover transition-all duration-500">
+                        <div class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-slate-800 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-lg" id="gallery-badge-1">
+                            Resultado Final
+                        </div>
+                    </div>
+                    <div class="p-5 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-base text-white">Porsche 718 Cayman GT4</h3>
+                            <p class="text-xs text-slate-400">Protección Cerámica Express & Detailing</p>
+                        </div>
+                        <button type="button" onclick="toggleBeforeAfter(1)" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-amber-400 text-xs font-bold px-4 py-2.5 rounded-xl transition-all border border-slate-700 touch-manipulation cursor-pointer">
+                            Antes / Después
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 2 -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden group shadow-xl">
+                    <div class="relative h-60 sm:h-72 bg-slate-950 flex items-center justify-center overflow-hidden">
+                        <img id="gallery-img-2" src="https://placehold.co/700x450/1e293b/38bdf8?text=Interior+-+Cuero+Nutrido+BMW" alt="BMW Interior Detailing" class="w-full h-full object-cover transition-all duration-500">
+                        <div class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-slate-800 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-lg" id="gallery-badge-2">
+                            Resultado Final
+                        </div>
+                    </div>
+                    <div class="p-5 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-base text-white">BMW X7 M-Sport</h3>
+                            <p class="text-xs text-slate-400">Detailing Completo Interior & Cuero</p>
+                        </div>
+                        <button type="button" onclick="toggleBeforeAfter(2)" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-amber-400 text-xs font-bold px-4 py-2.5 rounded-xl transition-all border border-slate-700 touch-manipulation cursor-pointer">
+                            Antes / Después
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Booking Engine Section -->
+    <section id="agendar" class="py-20 sm:py-24 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3" data-i18n="booking_heading">Herramienta de Agendamiento Inteligente</h2>
+                <p class="text-sm sm:text-base text-slate-400" data-i18n="booking_subheading">Elige tu servicio y selecciona la hora que mejor se adapte a ti. ¡Incluye opción de servicio exprés en las próximas 3 horas!</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+                    <!-- Step 1 & 2 Controls -->
+                    <div class="space-y-6 sm:space-y-7">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-200 mb-3" data-i18n="step1_label">1. Selecciona tu Servicio</label>
+                            <div class="grid grid-cols-1 gap-2.5">
+                                <button type="button" onclick="selectService('serv1')" id="btn-serv-serv1" class="service-btn text-left p-3.5 sm:p-4 rounded-xl border border-amber-500 bg-amber-500/10 transition-all flex items-center justify-between touch-manipulation cursor-pointer">
+                                    <div>
+                                        <div class="font-bold text-white text-xs sm:text-sm" data-i18n="serv1_title">Lavado Básico Interior & Exterior</div>
+                                        <div class="text-xs text-slate-400"><span data-i18n="base_price_label">Base</span>: $35 USD</div>
+                                    </div>
+                                    <i class="fa-solid fa-circle-check text-amber-500 text-base sm:text-lg"></i>
+                                </button>
+                                <button type="button" onclick="selectService('serv2')" id="btn-serv-serv2" class="service-btn text-left p-3.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 transition-all flex items-center justify-between touch-manipulation cursor-pointer">
+                                    <div>
+                                        <div class="font-bold text-white text-xs sm:text-sm" data-i18n="serv2_title">Lavado Exterior Elite</div>
+                                        <div class="text-xs text-slate-400"><span data-i18n="base_price_label">Base</span>: $45 USD</div>
+                                    </div>
+                                    <i class="fa-solid fa-circle text-slate-800 text-base sm:text-lg"></i>
+                                </button>
+                                <button type="button" onclick="selectService('serv3')" id="btn-serv-serv3" class="service-btn text-left p-3.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 transition-all flex items-center justify-between touch-manipulation cursor-pointer">
+                                    <div>
+                                        <div class="font-bold text-white text-xs sm:text-sm" data-i18n="serv3_title">Detailing Completo Interior & Exterior</div>
+                                        <div class="text-xs text-slate-400"><span data-i18n="base_price_label">Base</span>: $85 USD</div>
+                                    </div>
+                                    <i class="fa-solid fa-circle text-slate-800 text-base sm:text-lg"></i>
+                                </button>
+                                <button type="button" onclick="selectService('serv4')" id="btn-serv-serv4" class="service-btn text-left p-3.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 transition-all flex items-center justify-between touch-manipulation cursor-pointer">
+                                    <div>
+                                        <div class="font-bold text-white text-xs sm:text-sm" data-i18n="serv4_title">Protección Cerámica Express</div>
+                                        <div class="text-xs text-slate-400"><span data-i18n="base_price_label">Base</span>: $130 USD</div>
+                                    </div>
+                                    <i class="fa-solid fa-circle text-slate-800 text-base sm:text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-200 mb-3" data-i18n="step2_label">2. Selecciona tu Franja Horaria (Incluye Exprés 3 Horas)</label>
+                            <div class="grid grid-cols-2 gap-2.5" id="time-slots-container">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary & WhatsApp Form -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 sm:p-7 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base sm:text-lg font-bold mb-5 pb-3 border-b border-slate-800 flex items-center justify-between">
+                                <span data-i18n="summary_title">Resumen de tu Cita</span>
+                                <i class="fa-solid fa-receipt text-amber-500"></i>
+                            </h3>
+                            
+                            <div class="space-y-3 mb-6 text-xs sm:text-sm">
+                                <div class="flex justify-between items-start gap-2">
+                                    <span class="text-slate-400" data-i18n="summary_serv_label">Servicio:</span>
+                                    <span id="summary-service" class="font-semibold text-white text-right">Lavado Básico Interior & Exterior</span>
+                                </div>
+                                <div class="flex justify-between items-start gap-2">
+                                    <span class="text-slate-400" data-i18n="summary_time_label">Horario:</span>
+                                    <span id="summary-time" class="font-semibold text-white text-right">¡Exprés en 3 Horas!</span>
+                                </div>
+                                <div class="flex justify-between items-start gap-2">
+                                    <span class="text-slate-400" data-i18n="summary_rate_label">Ajuste tarifa:</span>
+                                    <span id="summary-tag" class="font-bold text-amber-400 text-right">+$20 USD</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl mb-6">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-300 font-medium text-xs sm:text-sm" data-i18n="summary_total_label">Total Estimado:</span>
+                                    <span id="summary-total" class="text-2xl sm:text-3xl font-extrabold text-amber-400">$55 USD</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1" data-i18n="summary_note">Incluye desplazamiento a domicilio en Los Ángeles y equipo profesional.</p>
+                            </div>
+                        </div>
+
+                        <form onsubmit="handleBooking(event)" class="space-y-3 sm:space-y-3.5">
+                            <div>
+                                <input type="text" id="client-name" data-i18n-placeholder="placeholder_name" placeholder="Tu Nombre Completo" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-amber-500 text-white placeholder-slate-500">
+                            </div>
+                            <div>
+                                <input type="text" id="client-car" data-i18n-placeholder="placeholder_car" placeholder="Modelo de tu Vehículo (Ej. BMW M4, Porsche 911)" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-amber-500 text-white placeholder-slate-500">
+                            </div>
+                            <div>
+                                <input type="tel" id="client-phone" data-i18n-placeholder="placeholder_phone" placeholder="Número de Teléfono / WhatsApp" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-amber-500 text-white placeholder-slate-500">
+                            </div>
+                            <button type="submit" id="btn-submit-booking-action" class="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold py-3.5 sm:py-4 rounded-xl transition-all shadow-lg shadow-emerald-600/25 active:scale-98 flex items-center justify-center space-x-2 text-xs sm:text-sm touch-manipulation cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                                <span data-i18n="btn_submit_booking">Agendar y Enviar por WhatsApp</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 sm:py-24 bg-slate-900/50 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3" data-i18n="faq_heading">Preguntas Frecuentes</h2>
+                <p class="text-sm sm:text-base text-slate-400" data-i18n="faq_subheading">Resolvemos tus dudas sobre nuestro servicio móvil para brindarte total tranquilidad.</p>
+            </div>
+            
+            <div class="space-y-3.5">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 transition-all">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex items-center justify-between text-left font-bold text-white text-sm sm:text-base touch-manipulation cursor-pointer">
+                        <span data-i18n="faq_q1">¿Necesitan toma de agua o electricidad en mi domicilio?</span>
+                        <i class="fa-solid fa-chevron-down text-amber-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden mt-3 pt-3 border-t border-slate-800 text-slate-300 text-xs sm:text-sm leading-relaxed" data-i18n="faq_a1">
+                        No te preocupes por nada. Nuestro equipo móvil viaja con tanques de agua purificada autónomos y generadores eléctricos silenciosos. Solo requerimos un espacio seguro (como tu cochera o estacionamiento privado) para trabajar cómodamente alrededor de tu vehículo.
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 transition-all">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex items-center justify-between text-left font-bold text-white text-sm sm:text-base touch-manipulation cursor-pointer">
+                        <span data-i18n="faq_q2">¿Qué métodos de pago aceptan?</span>
+                        <i class="fa-solid fa-chevron-down text-amber-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden mt-3 pt-3 border-t border-slate-800 text-slate-300 text-xs sm:text-sm leading-relaxed" data-i18n="faq_a2">
+                        Aceptamos Zelle, Apple Pay, tarjetas de crédito/débito y efectivo al finalizar el servicio cuando estés 100% satisfecho con el resultado.
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 transition-all">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex items-center justify-between text-left font-bold text-white text-sm sm:text-base touch-manipulation cursor-pointer">
+                        <span data-i18n="faq_q3">¿Qué productos utilizan para cuidar pinturas delicadas o cerámicas?</span>
+                        <i class="fa-solid fa-chevron-down text-amber-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden mt-3 pt-3 border-t border-slate-800 text-slate-300 text-xs sm:text-sm leading-relaxed" data-i18n="faq_a3">
+                        Utilizamos exclusivamente productos de gama alta con pH neutro, champús biodegradables de alta lubricación y microfibras ultra suaves libres de costuras para evitar cualquier micro-rayón en la laca de tu vehículo.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-slate-800/80 text-center text-xs sm:text-sm text-slate-500 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <p data-i18n="footer_copy">&copy; 2026 Elite Mobile Car Wash - Los Angeles, CA. Creado con dedicación para ofrecer excelencia y confort.</p>
+        </div>
+    </footer>
+
+    <!-- Modal: Service Inclusions Details -->
+    <div id="service-modal" class="modal-overlay fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4" style="display: none;">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative">
+            <button type="button" onclick="closeServiceDetails()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-300 flex items-center justify-center transition-colors cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
+                    <i id="modal-service-icon" class="fa-solid fa-soap"></i>
+                </div>
+                <div>
+                    <h3 id="modal-service-title" class="text-lg font-bold text-white">Detalle del Servicio</h3>
+                    <p id="modal-service-subtitle" class="text-xs text-amber-400 font-medium">Especificación completa y protocolo</p>
+                </div>
+            </div>
+            
+            <div class="space-y-5 text-xs sm:text-sm text-slate-300">
+                <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-3.5 flex justify-between items-center text-xs">
+                    <div>
+                        <span class="text-slate-400 block" data-i18n="modal_time_label">Tiempo estimado:</span>
+                        <strong id="modal-service-time" class="text-white text-sm">60 - 90 min</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block" data-i18n="modal_products_label">Química:</span>
+                        <span class="text-emerald-400 font-semibold" data-i18n="modal_products_value">pH Neutro & Anti-Rayones</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-3 flex items-center space-x-2 text-xs uppercase tracking-wider text-slate-400">
+                        <i class="fa-solid fa-clipboard-check text-amber-500"></i>
+                        <span data-i18n="modal_checklist_title">Lista Completa de lo que Incluye:</span>
+                    </h4>
+                    <ul id="modal-service-items" class="space-y-2 text-xs text-slate-300">
+                        <!-- Filled by JS -->
+                    </ul>
+                </div>
+
+                <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row gap-2.5">
+                    <button type="button" id="modal-select-btn" onclick="selectFromModal()" class="flex-1 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-amber-500/20 text-center text-xs sm:text-sm cursor-pointer">
+                        <span data-i18n="btn_select_and_book">Seleccionar este Paquete y Agendar</span>
+                    </button>
+                    <button type="button" onclick="closeServiceDetails()" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-300 font-semibold py-3 px-4 rounded-xl transition-all text-xs cursor-pointer">
+                        <span data-i18n="btn_close">Cerrar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Login / Register / Admin -->
+    <div id="auth-modal" class="modal-overlay fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4" style="display: none;">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 sm:p-7 shadow-2xl relative text-left">
+            <button type="button" onclick="closeAuthModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-300 flex items-center justify-center transition-colors cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            
+            <div class="flex items-center space-x-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 font-bold text-lg">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3 id="auth-modal-title" class="text-lg font-bold text-white" data-i18n="auth_modal_title">Acceso a Tu Cuenta</h3>
+                    <p class="text-xs text-slate-400" data-i18n="auth_modal_sub">Gestiona tus reservas o monitorea el negocio</p>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex rounded-xl bg-slate-950 p-1 mb-5 border border-slate-800">
+                <button type="button" onclick="setAuthTab('login')" id="tab-login" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-amber-500 text-slate-950 cursor-pointer">
+                    <span data-i18n="auth_tab_client">Cliente</span>
+                </button>
+                <button type="button" onclick="setAuthTab('admin')" id="tab-admin" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-crown text-amber-400 mr-1"></i> <span data-i18n="auth_tab_admin">Administrador</span>
+                </button>
+            </div>
+
+            <!-- Client Form -->
+            <form id="client-auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
+                <div id="auth-name-field" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="auth_name_label">Nombre Completo</label>
+                    <input type="text" id="auth-input-name" placeholder="Ej. Carlos Rivera" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-amber-500 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="auth_email_label">Correo Electrónico</label>
+                    <input type="email" id="auth-input-email" required placeholder="tu@correo.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-amber-500 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="auth_password_label">Contraseña</label>
+                    <input type="password" id="auth-input-pass" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-amber-500 text-white">
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 text-xs sm:text-sm cursor-pointer">
+                    <span data-i18n="auth_btn_login">Iniciar Sesión</span>
+                </button>
+                <div class="text-center pt-1">
+                    <button type="button" onclick="toggleAuthMode()" id="auth-toggle-mode-btn" class="text-xs text-amber-400 hover:underline cursor-pointer">
+                        ¿No tienes cuenta? Regístrate aquí
+                    </button>
+                </div>
+            </form>
+
+            <!-- Admin Access Card -->
+            <div id="admin-auth-card" class="hidden space-y-4">
+                <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs text-amber-300 leading-relaxed">
+                    <div class="font-bold flex items-center mb-1 text-sm text-amber-400">
+                        <i class="fa-solid fa-lock-open mr-2"></i> Portal del Propietario (Admin)
+                    </div>
+                    Accede a las métricas del tráfico en vivo, análisis de demanda horaria y lista de citas generadas en Los Ángeles.
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <div><strong>Usuario Admin:</strong> admin@elitemobile.com</div>
+                    <div><strong>Clave:</strong> admin123</div>
+                </div>
+                <button type="button" onclick="loginAsAdmin()" class="w-full bg-gradient-to-r from-amber-500 to-amber-400 active:from-amber-600 active:to-amber-500 text-slate-950 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 text-xs sm:text-sm flex items-center justify-center space-x-2 cursor-pointer">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span data-i18n="auth_btn_admin_direct">Entrar como Administrador</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Admin Traffic Dashboard -->
+    <div id="admin-dashboard-modal" class="modal-overlay fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md items-center justify-center p-3 sm:p-6 overflow-y-auto" style="display: none;">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative my-auto">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl sm:text-2xl">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white">Panel de Tráfico y Métricas</h2>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+                                EN VIVO
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400" data-i18n="admin_sub">Monitoreo de visitantes, horas punta y reservas en Los Ángeles</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button type="button" onclick="refreshTrafficMetrics()" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-300 text-xs font-semibold py-2 px-3 rounded-xl border border-slate-700 flex items-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-rotate text-amber-400"></i>
+                        <span>Actualizar</span>
+                    </button>
+                    <button type="button" onclick="closeAdminDashboard()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-300 flex items-center justify-center cursor-pointer">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Key Metric Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-5">
+                <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-3.5 sm:p-4">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span data-i18n="stat_visits_total">Visitas Totales</span>
+                        <i class="fa-solid fa-users text-amber-400"></i>
+                    </div>
+                    <div id="stat-total-visits" class="text-xl sm:text-2xl md:text-3xl font-bold text-white">1,428</div>
+                    <div class="text-[10px] text-emerald-400 mt-1 flex items-center">
+                        <i class="fa-solid fa-arrow-trend-up mr-1"></i> +18.4% hoy
+                    </div>
+                </div>
+                <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-3.5 sm:p-4">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span data-i18n="stat_visits_active">Visitantes en Vivo</span>
+                        <i class="fa-solid fa-signal text-emerald-400"></i>
+                    </div>
+                    <div id="stat-live-users" class="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-400">7</div>
+                    <div class="text-[10px] text-slate-400 mt-1">Explorando citas</div>
+                </div>
+                <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-3.5 sm:p-4">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span data-i18n="stat_conversion">Tasa Conversión</span>
+                        <i class="fa-solid fa-bullseye text-amber-400"></i>
+                    </div>
+                    <div id="stat-conversion-rate" class="text-xl sm:text-2xl md:text-3xl font-bold text-white">4.8%</div>
+                    <div class="text-[10px] text-amber-400 mt-1">Visitas a reservas</div>
+                </div>
+                <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-3.5 sm:p-4">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span data-i18n="stat_revenue">Ventas Estimadas</span>
+                        <i class="fa-solid fa-dollar-sign text-emerald-400"></i>
+                    </div>
+                    <div id="stat-total-revenue" class="text-xl sm:text-2xl md:text-3xl font-bold text-amber-400">$2,380</div>
+                    <div class="text-[10px] text-slate-400 mt-1">Esta semana</div>
+                </div>
+            </div>
+
+            <!-- Two Columns: Zones & Peak Hours -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5">
+                    <h3 class="text-xs sm:text-sm font-bold text-white mb-3.5 flex items-center justify-between">
+                        <span data-i18n="traffic_zones_title">Tráfico por Zona de Los Ángeles</span>
+                        <i class="fa-solid fa-location-dot text-amber-400 text-xs"></i>
+                    </h3>
+                    <div class="space-y-2.5 text-xs" id="traffic-zones-bars"></div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5">
+                    <h3 class="text-xs sm:text-sm font-bold text-white mb-3.5 flex items-center justify-between">
+                        <span data-i18n="traffic_hours_title">Horas de Mayor Tráfico y Demanda</span>
+                        <i class="fa-solid fa-clock text-amber-400 text-xs"></i>
+                    </h3>
+                    <div class="space-y-2.5 text-xs" id="traffic-hours-bars"></div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings Table -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 mt-5">
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-3 flex items-center justify-between">
+                    <span data-i18n="admin_bookings_log">Últimas Citas Agendadas a Domicilio</span>
+                    <span class="text-[11px] text-slate-400">Sincronizado con WhatsApp</span>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300 min-w-[500px]">
+                        <thead class="border-b border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                            <tr>
+                                <th class="pb-2.5 font-semibold">Cliente</th>
+                                <th class="pb-2.5 font-semibold">Vehículo</th>
+                                <th class="pb-2.5 font-semibold">Servicio</th>
+                                <th class="pb-2.5 font-semibold">Horario</th>
+                                <th class="pb-2.5 font-semibold text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bookings-table" class="divide-y divide-slate-900"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-5 flex justify-end">
+                <button type="button" onclick="logoutSession()" class="text-xs text-rose-400 active:text-rose-300 font-semibold px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 transition-all flex items-center space-x-1.5 cursor-pointer">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Cerrar Sesión de Administrador</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language dictionaries (Spanish, English, Korean)
+        const i18n = {
+            es: {
+                nav_services: "Servicios",
+                nav_coverage: "Cobertura",
+                nav_gallery: "Trabajos",
+                nav_book: "Agendar Cita",
+                nav_faq: "FAQ",
+                nav_login: "Mi Cuenta",
+                nav_admin_panel: "Admin",
+                btn_book_now: "Reservar",
+                hero_badge: "Detailing Exclusivo a Domicilio en Los Ángeles",
+                hero_title_1: "El cuidado que tu auto de lujo merece, ",
+                hero_title_2: "sin moverte de casa",
+                hero_desc: "Servicio profesional de lavado y detallado móvil para vehículos de alta gama. Ahorra tiempo y agenda con nuestras tarifas dinámicas adaptadas a tu comodidad en Greater Los Angeles.",
+                hero_stat_rating: "4.9/5 Calificación",
+                hero_stat_certified: "100% Anti-Rayones",
+                hero_stat_express: "Exprés 3 Horas",
+                btn_hero_book: "Cotizar y Agendar Cita",
+                btn_hero_coverage: "Verificar Mi Zona",
+                services_heading: "Nuestros Paquetes de Cuidado",
+                services_subheading: "Tratamientos formulados específicamente para cuidar la pintura, carrocería e interiores delicados de autos nuevos y de lujo.",
+                serv1_title: "Lavado Básico Interior & Exterior",
+                serv1_desc: "Lavado exterior rápido a mano y aspirado esencial de interiores con limpieza de tablero.",
+                serv1_f1: "Lavado exterior e rines",
+                serv1_f2: "Aspirado interior de cortesía",
+                serv1_f3: "Limpieza de cristales básicos",
+                serv1_tag: "Económico y práctico",
+                serv2_title: "Lavado Exterior Elite",
+                serv2_desc: "Lavado a mano con técnica de doble balde, espuma desengrasante pH neutro y secado con microfibra.",
+                serv2_f1: "Limpieza detallada de rines",
+                serv2_f2: "Acondicionador e hidratante satinado de neumáticos (con protección UV)",
+                serv2_f3: "Cera líquida de protección rápida",
+                serv2_tag: "Base ideal exterior",
+                serv3_badge: "Más Elegido",
+                serv3_title: "Detailing Completo Interior & Exterior",
+                serv3_desc: "El tratamiento insignia. Devolvemos la estética de concesionario a tu vehículo en casa.",
+                serv3_f1: "Todo el servicio Exterior Elite",
+                serv3_f2: "Aspirado profundo y cajuela",
+                serv3_f3: "Condicionamiento de cuero",
+                serv3_tag: "Vehículos de lujo",
+                serv4_title: "Protección Cerámica Express",
+                serv4_desc: "Sellado de pintura con polímeros avanzados que otorgan brillo espejo y resistencia hidrofóbica.",
+                serv4_f1: "Descontaminación de pintura",
+                serv4_f2: "Aplicación de sellador cerámico",
+                serv4_f3: "Protección UV de larga duración",
+                serv4_tag: "Máximo acabado",
+                btn_view_details: "Ver qué incluye al detalle",
+                modal_time_label: "Tiempo estimado:",
+                modal_products_label: "Química:",
+                modal_products_value: "pH Neutro & Anti-Rayones",
+                modal_checklist_title: "Lista Completa de lo que Incluye:",
+                btn_select_and_book: "Seleccionar este Paquete y Agendar",
+                btn_close: "Cerrar",
+                coverage_badge: "Cobertura a Domicilio en Los Ángeles",
+                coverage_heading: "Verifica si Llegamos a tu Zona",
+                coverage_subheading: "Ingresa tu código postal (ZIP Code) o vecindario (ej. Beverly Hills, Downtown LA, Santa Monica, Glendale, Pasadena) para verificar disponibilidad.",
+                btn_verify: "Verificar",
+                gallery_heading: "Galería de Resultados (Antes y Después)",
+                gallery_subheading: "Toca el botón para comprobar la transformación radical que logramos en cada vehículo de alta gama.",
+                booking_heading: "Herramienta de Agendamiento Inteligente",
+                booking_subheading: "Elige tu servicio y selecciona la hora que mejor se adapte a ti. ¡Incluye opción de servicio exprés en las próximas 3 horas!",
+                step1_label: "1. Selecciona tu Servicio",
+                step2_label: "2. Selecciona tu Franja Horaria (Incluye Exprés 3 Horas)",
+                base_price_label: "Base",
+                summary_title: "Resumen de tu Cita",
+                summary_serv_label: "Servicio:",
+                summary_time_label: "Horario:",
+                summary_rate_label: "Ajuste tarifa:",
+                summary_total_label: "Total Estimado:",
+                summary_note: "Incluye desplazamiento a domicilio en Los Ángeles y equipo profesional.",
+                placeholder_name: "Tu Nombre Completo",
+                placeholder_car: "Modelo de tu Vehículo (Ej. BMW M4, Porsche 911)",
+                placeholder_phone: "Número de Teléfono / WhatsApp",
+                btn_submit_booking: "Agendar y Enviar por WhatsApp",
+                faq_heading: "Preguntas Frecuentes",
+                faq_subheading: "Resolvemos tus dudas sobre nuestro servicio móvil para brindarte total tranquilidad.",
+                faq_q1: "¿Necesitan toma de agua o electricidad en mi domicilio?",
+                faq_a1: "No te preocupes por nada. Nuestro equipo móvil viaja con tanques de agua purificada autónomos y generadores eléctricos silenciosos. Solo requerimos un espacio seguro (como tu cochera o estacionamiento privado) para trabajar cómodamente alrededor de tu vehículo.",
+                faq_q2: "¿Qué métodos de pago aceptan?",
+                faq_a2: "Aceptamos Zelle, Apple Pay, tarjetas de crédito/débito y efectivo al finalizar el servicio cuando estés 100% satisfecho con el resultado.",
+                faq_q3: "¿Qué productos utilizan para cuidar pinturas delicadas o cerámicas?",
+                faq_a3: "Utilizamos exclusivamente productos de gama alta con pH neutro, champús biodegradables de alta lubricación y microfibras ultra suaves libres de costuras para evitar cualquier micro-rayón en la laca de tu vehículo.",
+                footer_copy: "© 2026 Elite Mobile Car Wash - Los Angeles, CA. Creado con dedicación para ofrecer excelencia y confort.",
+                auth_modal_title: "Acceso a Tu Cuenta",
+                auth_modal_sub: "Gestiona tus reservas o monitorea el negocio",
+                auth_tab_client: "Cliente",
+                auth_tab_admin: "Administrador",
+                auth_name_label: "Nombre Completo",
+                auth_email_label: "Correo Electrónico",
+                auth_password_label: "Contraseña",
+                auth_btn_login: "Iniciar Sesión",
+                auth_btn_admin_direct: "Entrar como Administrador",
+                admin_sub: "Monitoreo de visitantes, horas punta y reservas en Los Ángeles",
+                stat_visits_total: "Visitas Totales",
+                stat_visits_active: "Visitantes en Vivo",
+                stat_conversion: "Tasa Conversión",
+                stat_revenue: "Ventas Estimadas",
+                traffic_zones_title: "Tráfico por Zona de Los Ángeles",
+                traffic_hours_title: "Horas de Mayor Tráfico y Demanda",
+                admin_bookings_log: "Últimas Citas Agendadas a Domicilio"
+            },
+            en: {
+                nav_services: "Services",
+                nav_coverage: "Coverage Area",
+                nav_gallery: "Gallery",
+                nav_book: "Book",
+                nav_faq: "FAQ",
+                nav_login: "My Account",
+                nav_admin_panel: "Admin",
+                btn_book_now: "Book Now",
+                hero_badge: "Exclusive Mobile Detailing in Los Angeles",
+                hero_title_1: "The premier care your luxury car deserves, ",
+                hero_title_2: "right at your doorstep",
+                hero_desc: "Professional mobile wash and detailing for high-end and luxury vehicles. Save time and book with our dynamic pricing tailored to your schedule across Greater Los Angeles.",
+                hero_stat_rating: "4.9/5 Rating",
+                hero_stat_certified: "100% Scratch-Free",
+                hero_stat_express: "3-Hour Express",
+                btn_hero_book: "Get Quote & Book Now",
+                btn_hero_coverage: "Check My Neighborhood",
+                services_heading: "Our Precision Care Packages",
+                services_subheading: "Custom treatments formulated to protect and preserve delicate paints, clear coats, and luxurious interiors.",
+                serv1_title: "Basic Wash Interior & Exterior",
+                serv1_desc: "Fast hand exterior wash and essential interior vacuum with dashboard wipe down.",
+                serv1_f1: "Hand exterior wash & rims",
+                serv1_f2: "Courtesy interior vacuuming",
+                serv1_f3: "Streak-free glass cleaning",
+                serv1_tag: "Fast & Convenient",
+                serv2_title: "Elite Exterior Wash",
+                serv2_desc: "Two-bucket hand wash, pH-neutral citrus pre-wash foam, and plush microfiber drying.",
+                serv2_f1: "Deep barrel wheel & brake dust clean",
+                serv2_f2: "Satin tire dressing & UV block",
+                serv2_f3: "Gloss-enhancing spray sealant",
+                serv2_tag: "Exterior Essential",
+                serv3_badge: "Most Popular",
+                serv3_title: "Full Interior & Exterior Detailing",
+                serv3_desc: "Our signature showroom treatment. We restore that brand-new look and feel to your vehicle in your driveway.",
+                serv3_f1: "Complete Elite Exterior package",
+                serv3_f2: "Deep carpet, mat & trunk vacuum",
+                serv3_f3: "Premium leather cleaning & hydration",
+                serv3_tag: "Luxury Vehicles",
+                serv4_title: "Express Ceramic Coating Protection",
+                serv4_desc: "Advanced ceramic polymer sealant providing deep optical mirror gloss and hydrophobic repelling.",
+                serv4_f1: "Chemical paint decontamination",
+                serv4_f2: "High-grade ceramic spray application",
+                serv4_f3: "Durable UV sun protection",
+                serv4_tag: "Master Finish",
+                btn_view_details: "View Full Inclusions",
+                modal_time_label: "Estimated Duration:",
+                modal_products_label: "Chemistry:",
+                modal_products_value: "pH-Neutral & Scratch-Free",
+                modal_checklist_title: "Complete Itemized Inclusions:",
+                btn_select_and_book: "Select This Package & Schedule",
+                btn_close: "Close",
+                coverage_badge: "Mobile Coverage in Los Angeles",
+                coverage_heading: "Check If We Service Your Neighborhood",
+                coverage_subheading: "Enter your ZIP Code or Los Angeles area (e.g. 90210, Beverly Hills, Downtown LA, Santa Monica, Glendale, Pasadena) to check instant availability.",
+                btn_verify: "Check Availability",
+                gallery_heading: "Transformation Gallery (Before & After)",
+                gallery_subheading: "Tap the toggle to see the stunning results achieved on prestige vehicles.",
+                booking_heading: "Smart Dynamic Booking Engine",
+                booking_subheading: "Pick your package and your preferred time. Includes a 3-hour rapid on-demand express arrival option!",
+                step1_label: "1. Select Your Service Package",
+                step2_label: "2. Choose Your Time Slot (Includes 3-Hour Express)",
+                base_price_label: "Base",
+                summary_title: "Appointment Summary",
+                summary_serv_label: "Service:",
+                summary_time_label: "Time:",
+                summary_rate_label: "Rate Adjustment:",
+                summary_total_label: "Estimated Total:",
+                summary_note: "Includes mobile travel anywhere in LA and pro gear.",
+                placeholder_name: "Your Full Name",
+                placeholder_car: "Vehicle Model (e.g. BMW M4, Porsche 911)",
+                placeholder_phone: "Phone Number / WhatsApp",
+                btn_submit_booking: "Schedule & Send via WhatsApp",
+                faq_heading: "Frequently Asked Questions",
+                faq_subheading: "Clear answers to give you complete peace of mind with our mobile detailing.",
+                faq_q1: "Do you need water or electrical hookups at my home?",
+                faq_a1: "Not at all. Our mobile units are 100% self-contained with purified spot-free water tanks and quiet on-board generators. We just need safe clearance around your vehicle.",
+                faq_q2: "What payment methods do you accept?",
+                faq_a2: "We accept Zelle, Apple Pay, major credit/debit cards, and cash upon inspection once you are 100% thrilled with the outcome.",
+                faq_q3: "What chemicals do you use on delicate or ceramic-coated paint?",
+                faq_a3: "We use exclusively pH-neutral, ceramic-safe shampoos, high-lubricity snow foam, and edgeless 500+ GSM microfiber towels to guarantee a swirl-free finish.",
+                footer_copy: "© 2026 Elite Mobile Car Wash - Los Angeles, CA. Dedicated to automotive perfection.",
+                auth_modal_title: "Account Access",
+                auth_modal_sub: "Manage bookings or track business metrics",
+                auth_tab_client: "Client",
+                auth_tab_admin: "Admin",
+                auth_name_label: "Full Name",
+                auth_email_label: "Email Address",
+                auth_password_label: "Password",
+                auth_btn_login: "Sign In",
+                auth_btn_admin_direct: "Enter as Administrator",
+                admin_sub: "Live monitor of visitors, peak demand hours & bookings in Los Angeles",
+                stat_visits_total: "Total Visits",
+                stat_visits_active: "Live Visitors",
+                stat_conversion: "Conversion Rate",
+                stat_revenue: "Estimated Sales",
+                traffic_zones_title: "Traffic by Los Angeles Neighborhood",
+                traffic_hours_title: "Peak Hourly Demand Distribution",
+                admin_bookings_log: "Recent On-Demand Bookings"
+            },
+            ko: {
+                nav_services: "서비스",
+                nav_coverage: "지역 확인",
+                nav_gallery: "갤러리",
+                nav_book: "예약",
+                nav_faq: "FAQ",
+                nav_login: "내 계정",
+                nav_admin_panel: "관리자",
+                btn_book_now: "예약하기",
+                hero_badge: "로스앤젤레스 프리미엄 출장 디테일링",
+                hero_title_1: "고급 차량을 위한 최고의 케어, ",
+                hero_title_2: "자택에서 편리하게",
+                hero_desc: "LA 전역의 고급 및 프리미엄 차량을 위한 전문 출장 세차 및 디테일링. 동적 요금제를 통해 원하시는 시간에 스마트하게 예약하세요.",
+                hero_stat_rating: "4.9/5 고객 만족도",
+                hero_stat_certified: "100% 스크래치 방지",
+                hero_stat_express: "3시간 내 신속 방문",
+                btn_hero_book: "견적 확인 및 예약",
+                btn_hero_coverage: "서비스 가능 지역 확인",
+                services_heading: "프리미엄 케어 패키지",
+                services_subheading: "고급 차량의 도장면과 가죽 인테리어를 안전하게 보호하는 맞춤형 케어입니다.",
+                serv1_title: "베이직 내외부 세차",
+                serv1_desc: "신속한 수작업 외부 세차 및 필수 실내 청소기 흡입 작업.",
+                serv1_f1: "외부 핸드워시 및 휠 세척",
+                serv1_f2: "실내 기본 진공 흡입 청소",
+                serv1_f3: "유리창 깨끗한 마무리",
+                serv1_tag: "가성비 & 빠른 케어",
+                serv2_title: "엘리트 익스테리어 세차",
+                serv2_desc: "투버킷 핸드워시, 중성 폼 세척 및 최고급 극세사 건조.",
+                serv2_f1: "정밀 휠 및 브레이크 분진 세척",
+                serv2_f2: "타이어 보호 광택제 도포",
+                serv2_f3: "고광택 스프레이 왁스 코팅",
+                serv2_tag: "외부 전용 추천",
+                serv3_badge: "가장 인기있는 패키지",
+                serv3_title: "풀 내외부 디테일링",
+                serv3_desc: "신차 컨디션으로 복원하는 시그니처 프리미엄 토탈 케어.",
+                serv3_f1: "엘리트 익스테리어 전체 포함",
+                serv3_f2: "트렁크 및 바닥 매트 딥클리닝",
+                serv3_f3: "프리미엄 가죽 클리닝 & 영양제",
+                serv3_tag: "럭셔리 차량 추천",
+                serv4_title: "익스프레스 세라믹 코팅",
+                serv4_desc: "탁월한 광택과 발수력을 제공하는 고급 세라믹 폴리머 코팅.",
+                serv4_f1: "도장면 철분 및 유막 제거",
+                serv4_f2: "고성능 세라믹 코팅제 시공",
+                serv4_f3: "강력한 자외선 차단 효과",
+                serv4_tag: "최고의 마감",
+                btn_view_details: "상세 포함 내역 보기",
+                modal_time_label: "예상 소요 시간:",
+                modal_products_label: "사용 제품:",
+                modal_products_value: "pH 중성 및 스크래치 방지",
+                modal_checklist_title: "상세 포함 작업 항목:",
+                btn_select_and_book: "이 패키지 선택 및 예약하기",
+                btn_close: "닫기",
+                coverage_badge: "로스앤젤레스 출장 지역",
+                coverage_heading: "방문 가능 지역 확인",
+                coverage_subheading: "우편번호(ZIP) 또는 지역명(예: 90210, 베벌리힐스, 한인타운, 다운타운 LA, 글렌데일, 패서디나)을 입력하세요.",
+                btn_verify: "확인하기",
+                gallery_heading: "시공 전후 갤러리",
+                gallery_subheading: "버튼을 탭하여 고급 차량의 시공 전후 변화를 확인해보세요.",
+                booking_heading: "스마트 동적 예약 시스템",
+                booking_subheading: "원하는 패키지와 시간을 선택하세요. 3시간 이내 긴급 방문 옵션도 지원합니다!",
+                step1_label: "1. 서비스 패키지 선택",
+                step2_label: "2. 방문 시간대 선택 (3시간 내 긴급 방문 가능)",
+                base_price_label: "기본",
+                summary_title: "예약 내역 요약",
+                summary_serv_label: "선택한 서비스:",
+                summary_time_label: "선택한 시간:",
+                summary_rate_label: "시간대 요금 변동:",
+                summary_total_label: "예상 총액:",
+                summary_note: "LA 전 지역 출장비 및 전문 장비 일체가 포함되어 있습니다.",
+                placeholder_name: "성함",
+                placeholder_car: "차량 모델 (예: BMW M4, 포르쉐 911)",
+                placeholder_phone: "전화번호 / WhatsApp",
+                btn_submit_booking: "WhatsApp으로 예약 전송",
+                faq_heading: "자주 묻는 질문",
+                faq_subheading: "출장 세차에 대한 궁금증을 바로 확인하세요.",
+                faq_q1: "자택에 수도나 전기 연결이 필요한가요?",
+                faq_a1: "전혀 필요하지 않습니다. 자체 연수 정수 탱크와 저소음 발전기를 탑재하여 완전 독립적으로 시공합니다.",
+                faq_q2: "결제 방법은 어떻게 되나요?",
+                faq_a2: "Zelle, Apple Pay, 신용카드/직불카드 및 시공 후 차량 검수 완료 시 현금 결제가 모두 가능합니다.",
+                faq_q3: "어떤 케미컬 제품을 사용하나요?",
+                faq_a3: "유리막 코팅과 도장면에 안전한 pH 중성 카샴푸와 초극세사 타월만을 사용하여 스크래치를 방지합니다.",
+                footer_copy: "© 2026 Elite Mobile Car Wash - Los Angeles, CA. 정성을 다하는 명품 모바일 세차 서비스.",
+                auth_modal_title: "계정 로그인",
+                auth_modal_sub: "예약 관리 및 비즈니스 트래픽 분석",
+                auth_tab_client: "고객",
+                auth_tab_admin: "관리자",
+                auth_name_label: "성함",
+                auth_email_label: "이메일 주소",
+                auth_password_label: "비밀번호",
+                auth_btn_login: "로그인",
+                auth_btn_admin_direct: "관리자로 바로 입장",
+                admin_sub: "로스앤젤레스 지역 실시간 방문자, 피크 타임 및 예약 현황",
+                stat_visits_total: "총 방문수",
+                stat_visits_active: "실시간 접속자",
+                stat_conversion: "예약 전환율",
+                stat_revenue: "예상 매출",
+                traffic_zones_title: "LA 주요 지역별 트래픽 분포",
+                traffic_hours_title: "시간대별 방문 및 예약 수요",
+                admin_bookings_log: "최근 예약 신청 내역"
+            }
+        };
+
+        // Service Catalog Data
+        const serviceDetailsData = {
+            serv1: {
+                title: { es: "Lavado Básico Interior & Exterior", en: "Basic Wash Interior & Exterior", ko: "베이직 내외부 세차" },
+                price: 35,
+                duration: { es: "45 - 60 min", en: "45 - 60 min", ko: "45 - 60분" },
+                icon: "fa-soap",
+                items: {
+                    es: [
+                        "Enjuague con agua filtrada a baja presión",
+                        "Lavado a mano con champú lubricante neutro",
+                        "Limpieza de caras exteriores de rines y llantas",
+                        "Secado suave con toallas de microfibra",
+                        "Aspirado básico de asientos, alfombras y tapetes",
+                        "Limpieza ligera de tablero y consola central",
+                        "Limpieza de cristales y parabrisas por dentro y fuera"
+                    ],
+                    en: [
+                        "Low-pressure spot-free filtered rinse",
+                        "Gentle hand wash with pH-neutral shampoo",
+                        "Face cleaning of all 4 alloy wheels and tires",
+                        "Scratch-free microfiber towel hand dry",
+                        "Courteous vacuuming of floor mats and seats",
+                        "Wipe down of dashboard and center console",
+                        "Streak-free glass cleaning inside and out"
+                    ],
+                    ko: [
+                        "정수 필터 연수 고압수 프리 린스",
+                        "pH 중성 샴푸 수작업 핸드워시",
+                        "4개 휠 전면 및 타이어 기본 세척",
+                        "극세사 드라잉 타월 부드러운 건조",
+                        "실내 시트 및 바닥 매트 기본 진공 흡입",
+                        "대시보드 및 센터페시아 기본 먼지 제거",
+                        "유리창 내외부 깨끗한 클리닝"
+                    ]
+                }
+            },
+            serv2: {
+                title: { es: "Lavado Exterior Elite", en: "Elite Exterior Wash", ko: "엘리트 익스테리어 세차" },
+                price: 45,
+                duration: { es: "60 - 75 min", en: "60 - 75 min", ko: "60 - 75분" },
+                icon: "fa-droplet",
+                items: {
+                    es: [
+                        "Pre-lavado con espuma densa activa (Snow Foam) afloja suciedad sin frotar",
+                        "Técnica de doble balde con rejillas anti-arenilla (Grit Guards)",
+                        "Limpieza profunda del barril interno de rines y pinzas de freno",
+                        "Desengrasado y limpieza de arcos de rueda",
+                        "Secado con aire caliente soplado para marcos, espejos y emblemas",
+                        "Acondicionador e hidratante satinado de neumáticos (con protección UV)",
+                        "Cera sintética selladora líquida con efecto hidrofóbico"
+                    ],
+                    en: [
+                        "Citrus Snow Foam touchless pre-wash to lift grime",
+                        "Two-bucket wash method with dirt-separating Grit Guards",
+                        "Deep clean of wheel inner barrels and brake calipers",
+                        "Fender well and wheel arch degreasing",
+                        "Warm filtered air blow-dry for crevices, mirrors and badges",
+                        "Satin tire dressing & UV block",
+                        "High-gloss spray ceramic sealant with rain repelling"
+                    ],
+                    ko: [
+                        "터치리스 프리워시 스노우폼 도포로 오염물 불림",
+                        "그릿가드 투버킷 공법 스크래치 방지 핸드워시",
+                        "휠 안쪽 림 및 브레이크 캘리퍼 정밀 세척",
+                        "휠하우스 안쪽 세척 및 오염 제거",
+                        "틈새 및 사이드미러 온풍 에어 드라잉",
+                        "타이어 보호 광택제 도포",
+                        "고광택 발수 스프레이 실런트 코팅"
+                    ]
+                }
+            },
+            serv3: {
+                title: { es: "Detailing Completo Interior & Exterior", en: "Full Interior & Exterior Detailing", ko: "풀 내외부 디테일링" },
+                price: 85,
+                duration: { es: "120 - 150 min", en: "120 - 150 min", ko: "120 - 150분" },
+                icon: "fa-car",
+                items: {
+                    es: [
+                        "Incluye el 100% de los pasos de Lavado Exterior Elite",
+                        "Aspirado industrial profundo de alfombras, cajuela y recovecos",
+                        "Limpieza a vapor y desinfección térmica de rejillas de aire acondicionado",
+                        "Limpieza y acondicionamiento nutritivo para vestiduras de cuero con filtro UV",
+                        "Shampoo e inyección-succión para manchas en tapicería o alfombrillas",
+                        "Detallado con brocha de cerdas de jabalí en botones y rejillas",
+                        "Eliminación de olores con tratamiento neutralizador"
+                    ],
+                    en: [
+                        "Everything included in the Elite Exterior Wash",
+                        "Industrial deep extraction vacuuming of carpets, trunk & crevices",
+                        "Steam sanitation of AC vents, cup holders & door jambs",
+                        "pH-balanced leather cleaning & nourishing conditioner with UV inhibitors",
+                        "Shampoo spot extraction for carpet & floor mats",
+                        "Ultra-soft boar hair brush detailing around switches & vents",
+                        "Cabin deodorizing & fresh interior finish"
+                    ],
+                    ko: [
+                        "엘리트 익스테리어 세차 전 과정 포함",
+                        "트렁크 및 바닥 매트 구석구석 고출력 진공 청소",
+                        "에어컨 송풍구 및 틈새 고온 스팀 살균 소독",
+                        "가죽 시트 딥클리닝 및 프리미엄 UV 차단 영양제 도포",
+                        "바닥 매트 및 직물 시트 샴푸 세척 및 얼룩 제거",
+                        "천연 돈모 디테일링 브러시 스위치 틈새 케어",
+                        "실내 탈취 및 쾌적한 피톤치드 마감"
+                    ]
+                }
+            },
+            serv4: {
+                title: { es: "Protección Cerámica Express", en: "Express Ceramic Coating Protection", ko: "익스프레스 세라믹 코팅" },
+                price: 130,
+                duration: { es: "150 - 180 min", en: "150 - 180 min", ko: "150 - 180분" },
+                icon: "fa-shield-halved",
+                items: {
+                    es: [
+                        "Lavado exterior completo + descontaminación química de hierro en pintura",
+                        "Barra de arcilla (Clay Bar) para dejar la superficie de la laca suave como cristal",
+                        "Inspección con lámpara LED para asegurar acabado libre de imperfecciones",
+                        "Aplicación manual de recubrimiento cerámico SiO2 de curado rápido",
+                        "Protección hidrofóbica extrema (el agua resbala sin manchar)",
+                        "Sellado cerámico para cristales (anti-lluvia) y caras de rines",
+                        "Garantía de protección y brillo espejo hasta por 6 meses"
+                    ],
+                    en: [
+                        "Full exterior detailing plus chemical iron and fallout decontamination",
+                        "Clay bar treatment to leave paint surface smooth as glass",
+                        "High-intensity LED inspection to ensure flawless surface prep",
+                        "Hand application of fast-curing SiO2 ceramic polymer coating",
+                        "Super-hydrophobic water beading and self-cleaning effect",
+                        "Glass ceramic rain-repellent shield and alloy wheel face sealant",
+                        "Mirror gloss and environmental protection lasting up to 6 months"
+                    ],
+                    ko: [
+                        "정밀 익스테리어 세차 및 도장면 철분/낙진 화학적 제거",
+                        "클레이바 시공으로 유리알처럼 매끄러운 도장면 정돈",
+                        "고광도 LED 인스펙션 라이트로 도장면 상태 정밀 점검",
+                        "SiO2 기반 고성능 세라믹 코팅제 수작업 시공",
+                        "초발수 비딩 효과 및 방오성 극대화",
+                        "유리창 발수 코팅 및 휠 전면 보호 코팅",
+                        "최대 6개월간 지속되는 미러 광택 및 자외선 보호"
+                    ]
+                }
+            }
+        };
+
+        // Time slots data
+        const timeSlotsData = [
+            {
+                key: "slot_express",
+                time: { es: "¡Exprés en 3 Horas!", en: "3-Hour Express Arrival", ko: "3시간 내 긴급 방문" },
+                tag: { es: "+$20 USD (Prioridad)", en: "+$20 USD (Priority)", ko: "+$20 USD (우선 배정)" },
+                modifier: 20
+            },
+            {
+                key: "slot_0900",
+                time: { es: "09:00 AM (Alta Demanda)", en: "09:00 AM (Peak Morning)", ko: "오전 09:00 (인기 시간)" },
+                tag: { es: "+$15 USD (Hora pico)", en: "+$15 USD (Peak)", ko: "+$15 USD (피크 타임)" },
+                modifier: 15
+            },
+            {
+                key: "slot_1130",
+                time: { es: "11:30 AM (Estándar)", en: "11:30 AM (Standard Midday)", ko: "오전 11:30 (표준 시간)" },
+                tag: { es: "+$0 USD (Tarifa regular)", en: "+$0 USD (Regular)", ko: "+$0 USD (기본 요금)" },
+                modifier: 0
+            },
+            {
+                key: "slot_1600",
+                time: { es: "04:00 PM (Económico)", en: "04:00 PM (Valley Discount)", ko: "오후 04:00 (할인 시간)" },
+                tag: { es: "-$10 USD (Descuento tarde)", en: "-$10 USD (Off-peak)", ko: "-$10 USD (오후 할인)" },
+                modifier: -10
+            }
+        ];
+
+        // Global State Variables
+        let currentLang = 'es';
+        let currentServiceKey = 'serv1';
+        let currentSlotKey = 'slot_express';
+        let currentBasePrice = 35;
+        let currentSlotPriceModifier = 20;
+        let currentServiceName = 'Lavado Básico Interior & Exterior';
+        let currentActiveModalService = 'serv1';
+        let currentUser = null;
+        let authMode = 'login';
+
+        // Local video loader from file input
+        function loadUserLocalVideo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const videoEl = document.getElementById('hero-bg-video');
+                if (videoEl) {
+                    const objectUrl = URL.createObjectURL(file);
+                    videoEl.src = objectUrl;
+                    videoEl.load();
+                    videoEl.play().catch(() => {});
+                }
+            }
+        }
+
+        function toggleVideoSound() {
+            const v = document.getElementById('hero-bg-video');
+            const icon = document.getElementById('sound-icon');
+            if (!v) return;
+            v.muted = !v.muted;
+            if (v.muted) {
+                icon.className = "fa-solid fa-volume-xmark";
+            } else {
+                icon.className = "fa-solid fa-volume-high text-amber-400";
+            }
+        }
+
+        function toggleVideoPlayback() {
+            const v = document.getElementById('hero-bg-video');
+            const icon = document.getElementById('play-icon');
+            if (!v) return;
+            if (v.paused) {
+                v.play();
+                icon.className = "fa-solid fa-pause";
+            } else {
+                v.pause();
+                icon.className = "fa-solid fa-play text-amber-400";
+            }
+        }
+
+        // Language Switcher
+        function changeLanguage(lang) {
+            if (!i18n[lang]) return;
+            currentLang = lang;
+
+            const sel = document.getElementById('lang-selector');
+            if (sel && sel.value !== lang) sel.value = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const pKey = el.getAttribute('data-i18n-placeholder');
+                if (i18n[lang][pKey]) {
+                    el.placeholder = i18n[lang][pKey];
+                }
+            });
+
+            renderTimeSlots();
+            updateSummary();
+            renderTrafficVisuals();
+        }
+
+        // Render Time Slots
+        function renderTimeSlots() {
+            const container = document.getElementById('time-slots-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            timeSlotsData.forEach(slot => {
+                const isSelected = slot.key === currentSlotKey;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectSlot(slot);
+                btn.className = `p-3 sm:p-3.5 rounded-xl border text-left transition-all touch-manipulation cursor-pointer flex flex-col justify-between ${
+                    isSelected 
+                    ? 'border-amber-500 bg-amber-500/10 text-white ring-1 ring-amber-500/40' 
+                    : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700'
+                }`;
+
+                btn.innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-white mb-1">${slot.time[currentLang]}</div>
+                    <div class="text-[11px] ${isSelected ? 'text-amber-400 font-bold' : 'text-slate-400'}">${slot.tag[currentLang]}</div>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function selectService(key) {
+            currentServiceKey = key;
+            const data = serviceDetailsData[key];
+            currentBasePrice = data.price;
+            currentServiceName = data.title[currentLang];
+
+            const keys = ['serv1', 'serv2', 'serv3', 'serv4'];
+            keys.forEach(k => {
+                const btn = document.getElementById(`btn-serv-${k}`);
+                if (!btn) return;
+                const icon = btn.querySelector('.fa-solid');
+                if (k === key) {
+                    btn.className = "service-btn text-left p-3.5 sm:p-4 rounded-xl border border-amber-500 bg-amber-500/10 transition-all flex items-center justify-between touch-manipulation cursor-pointer ring-1 ring-amber-500/40";
+                    if (icon) icon.className = "fa-solid fa-circle-check text-amber-500 text-base sm:text-lg";
+                } else {
+                    btn.className = "service-btn text-left p-3.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 transition-all flex items-center justify-between touch-manipulation cursor-pointer";
+                    if (icon) icon.className = "fa-solid fa-circle text-slate-800 text-base sm:text-lg";
+                }
+            });
+
+            updateSummary();
+        }
+
+        function selectSlot(slot) {
+            currentSlotKey = slot.key;
+            currentSlotPriceModifier = slot.modifier;
+            renderTimeSlots();
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const servData = serviceDetailsData[currentServiceKey];
+            currentServiceName = servData.title[currentLang];
+            const servEl = document.getElementById('summary-service');
+            if (servEl) servEl.innerText = currentServiceName;
+            
+            const slotData = timeSlotsData.find(s => s.key === currentSlotKey) || timeSlotsData[0];
+            const timeEl = document.getElementById('summary-time');
+            const tagEl = document.getElementById('summary-tag');
+            if (timeEl) timeEl.innerText = slotData.time[currentLang];
+            if (tagEl) tagEl.innerText = slotData.tag[currentLang];
+            
+            const total = currentBasePrice + currentSlotPriceModifier;
+            const totEl = document.getElementById('summary-total');
+            if (totEl) totEl.innerText = `$${total} USD`;
+        }
+
+        // Service details modal
+        function openServiceDetails(serviceKey) {
+            currentActiveModalService = serviceKey;
+            const s = serviceDetailsData[serviceKey];
+            document.getElementById('modal-service-title').innerText = s.title[currentLang];
+            document.getElementById('modal-service-icon').className = `fa-solid ${s.icon}`;
+            document.getElementById('modal-service-time').innerText = s.duration[currentLang];
+
+            const listEl = document.getElementById('modal-service-items');
+            listEl.innerHTML = '';
+            s.items[currentLang].forEach(itemText => {
+                const li = document.createElement('li');
+                li.className = "flex items-start";
+                li.innerHTML = `<i class="fa-solid fa-circle-check text-amber-500 mt-1 mr-2 text-xs flex-shrink-0"></i><span>${itemText}</span>`;
+                listEl.appendChild(li);
+            });
+
+            const modal = document.getElementById('service-modal');
+            modal.style.display = 'flex';
+            modal.classList.add('active');
+        }
+
+        function closeServiceDetails() {
+            const modal = document.getElementById('service-modal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        }
+
+        function selectFromModal() {
+            closeServiceDetails();
+            selectService(currentActiveModalService);
+            const bookSection = document.getElementById('agendar');
+            if (bookSection) bookSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Coverage checker for Greater Los Angeles
+        function checkCoverage() {
+            const input = document.getElementById('zip-input');
+            const res = document.getElementById('coverage-result');
+            if (!input || !res) return;
+            const val = input.value.trim();
+            if (!val) {
+                res.innerHTML = `<span class="text-amber-400">Por favor ingresa un código postal o vecindario de Los Ángeles.</span>`;
+                return;
+            }
+            res.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i> ¡Excelente! Cobertura confirmada para "${val}". Sin recargo de viaje en Greater LA.</span>`;
+        }
+
+        // Before & After Gallery Toggle
+        const galleryState = { 1: false, 2: false };
+        function toggleBeforeAfter(id) {
+            galleryState[id] = !galleryState[id];
+            const img = document.getElementById(`gallery-img-${id}`);
+            const badge = document.getElementById(`gallery-badge-${id}`);
+            if (!img || !badge) return;
+
+            if (galleryState[id]) {
+                img.src = id === 1 
+                    ? "https://placehold.co/700x450/334155/cbd5e1?text=Antes+-+Suciedad+y+Manchas+Porsche" 
+                    : "https://placehold.co/700x450/334155/cbd5e1?text=Interior+-+Antes+del+Detailing+BMW";
+                badge.innerText = currentLang === 'en' ? "Previous Condition" : currentLang === 'ko' ? "작업 전 상태" : "Estado Anterior";
+                badge.className = "absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg";
+            } else {
+                img.src = id === 1 
+                    ? "https://placehold.co/700x450/1e293b/f59e0b?text=Despues+-+Brillo+Espejo+Porsche" 
+                    : "https://placehold.co/700x450/1e293b/38bdf8?text=Interior+-+Cuero+Nutrido+BMW";
+                badge.innerText = currentLang === 'en' ? "Showroom Result" : currentLang === 'ko' ? "작업 완료 결과" : "Resultado Final";
+                badge.className = "absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-slate-800 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-lg";
+            }
+        }
+
+        // FAQ accordion
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('.fa-chevron-down');
+            if (content) content.classList.toggle('hidden');
+            if (icon) icon.classList.toggle('rotate-180');
+        }
+
+        // Direct WhatsApp Booking Action
+        function handleBooking(event) {
+            event.preventDefault();
+            const name = document.getElementById('client-name').value.trim();
+            const car = document.getElementById('client-car').value.trim();
+            const phone = document.getElementById('client-phone').value.trim();
+            const total = currentBasePrice + currentSlotPriceModifier;
+            const slotObj = timeSlotsData.find(s => s.key === currentSlotKey) || timeSlotsData[0];
+            const slotLabel = slotObj.time[currentLang];
+
+            // Add to admin live records
+            trafficStats.recentBookings.unshift({
+                client: name,
+                car: car,
+                service: currentServiceName,
+                slot: slotLabel,
+                total: total
+            });
+            trafficStats.totalRevenue += total;
+            trafficStats.totalVisits += 1;
+
+            const textMsg = `*Elite Mobile Car Wash Los Angeles*%0A- *Cliente:* ${encodeURIComponent(name)}%0A- *Vehículo:* ${encodeURIComponent(car)}%0A- *Teléfono:* ${encodeURIComponent(phone)}%0A- *Servicio:* ${encodeURIComponent(currentServiceName)}%0A- *Horario:* ${encodeURIComponent(slotLabel)}%0A- *Total Estimado:* $${total} USD`;
+            
+            // Open WhatsApp direct link
+            const waUrl = `https://wa.me/?text=${textMsg}`;
+            window.location.href = waUrl;
+        }
+
+        // Traffic metrics for admin dashboard
+        const trafficStats = {
+            totalVisits: 1428,
+            liveUsers: 7,
+            conversionRate: 4.8,
+            totalRevenue: 2380,
+            zones: [
+                { name: "Beverly Hills & Bel Air (90210)", share: 34, color: "bg-amber-400" },
+                { name: "Downtown LA & Arts District (90012)", share: 26, color: "bg-blue-400" },
+                { name: "Koreatown & Mid-Wilshire (90005)", share: 19, color: "bg-emerald-400" },
+                { name: "Santa Monica & Brentwood (90401)", share: 14, color: "bg-purple-400" },
+                { name: "Pasadena & Glendale (91101)", share: 7, color: "bg-rose-400" }
+            ],
+            hours: [
+                { time: "08:00 AM - 11:00 AM (Pico Mañana)", traffic: 88, status: "Tarifa Alta" },
+                { time: "11:00 AM - 02:00 PM (Almuerzo / Exprés)", traffic: 96, status: "Máxima Demanda" },
+                { time: "02:00 PM - 05:00 PM (Tarde Regular)", traffic: 62, status: "Tarifa Estándar" },
+                { time: "05:00 PM - 08:00 PM (Horario Valle)", traffic: 38, status: "Tarifa Descuento" }
+            ],
+            recentBookings: [
+                { client: "Alejandro V.", car: "Porsche 718 Cayman GT4", service: "Protección Cerámica Express", slot: "09:00 AM (Alta)", total: 140 },
+                { client: "Sarah Jenkins", car: "BMW X5 M-Sport", service: "Detailing Completo", slot: "¡Exprés 3 Horas!", total: 105 },
+                { client: "David Kim", car: "Mercedes G-Wagon", service: "Detailing Completo", slot: "11:00 AM (Alta)", total: 95 }
+            ]
+        };
+
+        function openAuthModal(tab = 'login') {
+            if (currentUser && currentUser.role === 'admin') {
+                openAdminDashboard();
+                return;
+            }
+            const modal = document.getElementById('auth-modal');
+            modal.style.display = 'flex';
+            modal.classList.add('active');
+            setAuthTab(tab);
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        }
+
+        function setAuthTab(tab) {
+            const clientForm = document.getElementById('client-auth-form');
+            const adminCard = document.getElementById('admin-auth-card');
+            const tabLogin = document.getElementById('tab-login');
+            const tabAdmin = document.getElementById('tab-admin');
+
+            if (tab === 'admin') {
+                clientForm.classList.add('hidden');
+                adminCard.classList.remove('hidden');
+                tabAdmin.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-amber-500 text-slate-950 cursor-pointer";
+                tabLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer";
+            } else {
+                clientForm.classList.remove('hidden');
+                adminCard.classList.add('hidden');
+                tabLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-amber-500 text-slate-950 cursor-pointer";
+                tabAdmin.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer";
+            }
+        }
+
+        function toggleAuthMode() {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            const nameField = document.getElementById('auth-name-field');
+            const submitBtn = document.getElementById('auth-submit-btn');
+            const toggleBtn = document.getElementById('auth-toggle-mode-btn');
+
+            if (authMode === 'register') {
+                nameField.classList.remove('hidden');
+                submitBtn.innerHTML = `<span>Crear Cuenta</span>`;
+                toggleBtn.innerText = "¿Ya tienes cuenta? Inicia sesión";
+            } else {
+                nameField.classList.add('hidden');
+                submitBtn.innerHTML = `<span>Iniciar Sesión</span>`;
+                toggleBtn.innerText = "¿No tienes cuenta? Regístrate aquí";
+            }
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('auth-input-email').value.trim();
+            
+            // SECURITY: Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                alert('Por favor, ingresa un email válido');
+                return;
+            }
+            
+            let name = email.split('@')[0]; // Default: use email prefix
+            if (authMode === 'register') {
+                const nameField = document.getElementById('auth-input-name').value.trim();
+                if (nameField && nameField.length > 0) {
+                    name = nameField;
+                } else {
+                    alert('Por favor, ingresa tu nombre');
+                    return;
+                }
+            }
+            
+            // SECURITY: Sanitize name to prevent XSS
+            name = name.replace(/[<>\"']/g, ''); // Remove potentially dangerous characters
+
+            currentUser = { name, email, role: 'client' };
+            updateAuthUI();
+            closeAuthModal();
+
+            const nameInput = document.getElementById('client-name');
+            if (nameInput && !nameInput.value) nameInput.value = currentUser.name;
+        }
+
+        function loginAsAdmin() {
+            // SECURITY: Hardcoded admin credentials removed
+            // Admin authentication must be implemented server-side with secure credentials
+            console.warn('Admin login attempt - server-side authentication required');
+            alert('Admin login requires proper server-side authentication. This feature is disabled.');
+        }
+
+        function logoutSession() {
+            currentUser = null;
+            updateAuthUI();
+            closeAdminDashboard();
+        }
+
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('btn-login-header');
+            const adminBtn = document.getElementById('btn-admin-header');
+
+            if (!currentUser) {
+                loginBtn.innerHTML = `<i class="fa-regular fa-user text-amber-400"></i><span class="hidden sm:inline" data-i18n="nav_login">${i18n[currentLang].nav_login}</span>`;
+                adminBtn.classList.add('hidden');
+                adminBtn.classList.remove('inline-flex');
+            } else if (currentUser.role === 'admin') {
+                loginBtn.innerHTML = `<i class="fa-solid fa-crown text-amber-400"></i><span class="hidden sm:inline">${currentUser.name}</span>`;
+                adminBtn.classList.remove('hidden');
+                adminBtn.classList.add('inline-flex');
+            } else {
+                loginBtn.innerHTML = `<i class="fa-solid fa-user-check text-emerald-400"></i><span class="hidden sm:inline">${currentUser.name}</span>`;
+                adminBtn.classList.add('hidden');
+                adminBtn.classList.remove('inline-flex');
+            }
+        }
+
+        function openAdminDashboard() {
+            renderTrafficVisuals();
+            const modal = document.getElementById('admin-dashboard-modal');
+            // SECURITY: Use consistent class-based toggling to prevent state conflicts
+            modal.classList.add('active');
+        }
+
+        function closeAdminDashboard() {
+            const modal = document.getElementById('admin-dashboard-modal');
+            // SECURITY: Use consistent class-based toggling to prevent state conflicts
+            modal.classList.remove('active');
+        }
+
+        function refreshTrafficMetrics() {
+            trafficStats.liveUsers = Math.floor(Math.random() * 6) + 4;
+            trafficStats.totalVisits += Math.floor(Math.random() * 3) + 1;
+            renderTrafficVisuals();
+        }
+
+        function renderTrafficVisuals() {
+            document.getElementById('stat-total-visits').innerText = trafficStats.totalVisits.toLocaleString();
+            document.getElementById('stat-live-users').innerText = trafficStats.liveUsers;
+            document.getElementById('stat-conversion-rate').innerText = `${trafficStats.conversionRate}%`;
+            document.getElementById('stat-total-revenue').innerText = `$${trafficStats.totalRevenue.toLocaleString()} USD`;
+
+            const zonesContainer = document.getElementById('traffic-zones-bars');
+            if (zonesContainer) {
+                zonesContainer.innerHTML = '';
+                trafficStats.zones.forEach(z => {
+                    // SECURITY: Use safe DOM methods instead of innerHTML
+                    const item = document.createElement('div');
+                    item.className = 'space-y-1';
+                    
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'flex justify-between text-slate-300 text-[11px] sm:text-xs';
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = z.name; // Safe: text only
+                    const shareSpan = document.createElement('span');
+                    shareSpan.className = 'font-bold text-white';
+                    shareSpan.textContent = `${z.share}%`;
+                    labelDiv.appendChild(nameSpan);
+                    labelDiv.appendChild(shareSpan);
+                    
+                    const barDiv = document.createElement('div');
+                    barDiv.className = 'w-full bg-slate-900 rounded-full h-2 overflow-hidden';
+                    const fillDiv = document.createElement('div');
+                    fillDiv.className = `${z.color} h-2 rounded-full transition-all duration-500`;
+                    fillDiv.style.width = `${z.share}%`;
+                    barDiv.appendChild(fillDiv);
+                    
+                    item.appendChild(labelDiv);
+                    item.appendChild(barDiv);
+                    zonesContainer.appendChild(item);
+                });
+            }
+
+            const hoursContainer = document.getElementById('traffic-hours-bars');
+            if (hoursContainer) {
+                hoursContainer.innerHTML = '';
+                trafficStats.hours.forEach(h => {
+                    // SECURITY: Use safe DOM methods instead of innerHTML
+                    const item = document.createElement('div');
+                    item.className = 'space-y-1';
+                    
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'flex justify-between text-slate-300 text-[11px] sm:text-xs';
+                    const timeSpan = document.createElement('span');
+                    timeSpan.textContent = h.time; // Safe: text only
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = 'text-amber-400 font-semibold';
+                    statusSpan.textContent = h.status;
+                    labelDiv.appendChild(timeSpan);
+                    labelDiv.appendChild(statusSpan);
+                    
+                    const barDiv = document.createElement('div');
+                    barDiv.className = 'w-full bg-slate-900 rounded-full h-2 overflow-hidden';
+                    const fillDiv = document.createElement('div');
+                    fillDiv.className = 'bg-gradient-to-r from-amber-500 to-amber-300 h-2 rounded-full';
+                    fillDiv.style.width = `${h.traffic}%`;
+                    barDiv.appendChild(fillDiv);
+                    
+                    item.appendChild(labelDiv);
+                    item.appendChild(barDiv);
+                    hoursContainer.appendChild(item);
+                });
+            }
+
+            const bookingsTable = document.getElementById('admin-bookings-table');
+            if (bookingsTable) {
+                bookingsTable.innerHTML = '';
+                trafficStats.recentBookings.forEach(b => {
+                    // SECURITY: Use safe DOM methods instead of innerHTML
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-900/50 transition-colors text-[11px] sm:text-xs";
+                    
+                    const cells = [
+                        { text: b.client, classes: "py-2.5 font-medium text-white" },
+                        { text: b.car, classes: "py-2.5 text-slate-400" },
+                        { text: b.service, classes: "py-2.5 text-slate-300" },
+                        { text: b.slot, classes: "py-2.5 text-amber-400" },
+                        { text: `$${b.total} USD`, classes: "py-2.5 font-bold text-right text-emerald-400" }
+                    ];
+                    
+                    cells.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.className = cell.classes;
+                        td.textContent = cell.text; // Safe: text only
+                        tr.appendChild(td);
+                    });
+                    
+                    bookingsTable.appendChild(tr);
+                });
+            }
+        }
+
+        // Initialization on DOM ready
+        window.addEventListener('DOMContentLoaded', () => {
+            selectService('serv1');
+            renderTimeSlots();
+            updateSummary();
+            renderTrafficVisuals();
+
+            // Background video autoplay handling with error management
+            const video = document.getElementById('hero-bg-video');
+            if (video) {
+                video.muted = true;
+                
+                // SECURITY & PERFORMANCE: Check for reduced motion preference
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (prefersReducedMotion) {
+                    video.style.display = 'none';
+                    console.log('Video autoplay disabled: prefers-reduced-motion');
+                    return;
+                }
+                
+                // Add error handler for video load failures
+                video.addEventListener('error', (e) => {
+                    console.error('Video loading error:', e);
+                    // Fallback gradient background shown via CSS poster attribute
+                });
+                
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch((error) => {
+                        // In case low battery or browser policy delays autoplay
+                        console.warn('Video autoplay prevented:', error.name);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
